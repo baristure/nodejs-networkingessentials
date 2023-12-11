@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WebSocket Client</title>
+</head>
+<body>
+  <h1>WebSocket Example</h1>
+  <input type="text" id="messageInput" placeholder="Enter message">
+  <button onclick="sendMessage()">Send Message</button>
+  <div id="output"></div>
+
+  <script>
+    const socket = new WebSocket('ws://localhost:3000');
+
+    // Connection opened
+    socket.addEventListener('open', (event) => {
+      console.log('Connected to WebSocket server');
+    });
+
+    // Listen for messages from the server
+    socket.addEventListener('message', (event) => {
+      console.log(`Received message: ${event.data}`);
+      displayMessage(`Server says: ${event.data}`);
+    });
+
+    // Listen for the connection to be closed
+    socket.addEventListener('close', (event) => {
+      console.log('Disconnected from WebSocket server');
+    });
+
+    // Function to send a message to the server
+    function sendMessage() {
+      const messageInput = document.getElementById('messageInput');
+      const message = messageInput.value;
+      if (message) {
+        socket.send(message);
+        displayMessage(`You say: ${message}`);
+        messageInput.value = '';
+      }
+    }
+
+    // Function to display a message on the page
+    function displayMessage(message) {
+      const outputDiv = document.getElementById('output');
+      const messageDiv = document.createElement('div');
+      messageDiv.textContent = message;
+      outputDiv.appendChild(messageDiv);
+    }
+  </script>
+</body>
+</html>
